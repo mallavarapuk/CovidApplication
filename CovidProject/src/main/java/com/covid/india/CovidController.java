@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 public class CovidController {
 
 	@GetMapping("/covid19/state")
+	@CrossOrigin
 	public Map getCovid19StateData() {
 		Map response = new HashMap();
 		String uri = "https://api.covid19india.org/state_district_wise.json";
@@ -27,6 +29,7 @@ public class CovidController {
 	}
 
 	@GetMapping("/covid19/india")
+	@CrossOrigin
 	public Map getCovid19IndiaData() {
 		Map response = new HashMap();
 		Map stateDataMap = null;
