@@ -30,7 +30,8 @@ public class CovidController {
 
 	@GetMapping("/covid19/india")
 	@CrossOrigin
-	public Map getCovid19IndiaData() {
+	public List getCovid19IndiaData() {
+		List finalData = new ArrayList();
 		Map response = new HashMap();
 		Map stateDataMap = null;
 		String uri = "https://api.covid19india.org/data.json";
@@ -48,11 +49,12 @@ public class CovidController {
 					stateDataMap.put("recovered", values.get("recovered"));
 					stateDataMap.put("state", values.get("state"));
 					stateDataMap.put("statecode", values.get("statecode"));
-					response.put(values.get("state"), stateDataMap);
+					finalData.add(stateDataMap);
+//					response.put(values.get("state"), stateDataMap);
 				}
 			}
 		}
-		return response;
+		return finalData;
 	}
 
 }
