@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -82,7 +83,45 @@ public class CovidController {
 					stateDataMap.put("state", values.get("state"));
 					stateDataMap.put("statecode", values.get("statecode"));
 					finalData.add(stateDataMap);
-//response.put(values.get("state"), stateDataMap);
+				}
+			}
+		}
+		return finalData;
+	}
+
+	@GetMapping("/covid19/india/{state}")
+	@CrossOrigin
+	public List getCovid19IndiaDataByState(@PathVariable("state") String state) {
+		List finalData = new ArrayList();
+		Map response = new HashMap();
+		Map stateDataMap = null;
+		String uri = "https://api.covid19india.org/data.json";
+		RestTemplate restTemplate = new RestTemplate();
+		Map<Object, Object> result = (Map<Object, Object>) restTemplate.getForObject(uri, Map.class);
+
+		for (Map.Entry<Object, Object> entry : result.entrySet()) {
+			if (entry.getKey().toString().equalsIgnoreCase("statewise")) {
+				List<Map<String, Object>> totalStateDataValues = (List) entry.getValue();
+				for (Map<String, Object> values : totalStateDataValues) {
+					stateDataMap = new HashMap();
+					if (state.length() > 0 && StringUtils.startsWithIgnoreCase(values.get("state").toString(), state)) {
+						stateDataMap.put("active", values.get("active"));
+						stateDataMap.put("confirmed", values.get("confirmed"));
+						stateDataMap.put("deaths", values.get("deaths"));
+						stateDataMap.put("recovered", values.get("recovered"));
+						stateDataMap.put("state", values.get("state"));
+						stateDataMap.put("statecode", values.get("statecode"));
+						finalData.add(stateDataMap);
+					} else if (state.length() <= 0) {
+						stateDataMap.put("active", values.get("active"));
+						stateDataMap.put("confirmed", values.get("confirmed"));
+						stateDataMap.put("deaths", values.get("deaths"));
+						stateDataMap.put("recovered", values.get("recovered"));
+						stateDataMap.put("state", values.get("state"));
+						stateDataMap.put("statecode", values.get("statecode"));
+						finalData.add(stateDataMap);
+					}
+
 				}
 			}
 		}
